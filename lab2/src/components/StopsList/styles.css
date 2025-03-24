@@ -1,0 +1,70 @@
+.stops-page__pagination {
+    padding: 0;
+    margin: 2rem 0.7rem;
+}
+
+.stops-page__stops-list {
+    overflow-y: scroll;
+    max-height: calc(100vh - 295px);
+}
+
+.stops-page__stops-list::-webkit-scrollbar {
+    width: 7px;
+}
+
+.stops-page__stops-list::-webkit-scrollbar-track {
+    background-color: #cde1e2;
+}
+
+.stops-page__stops-list::-webkit-scrollbar-thumb {
+    background-color: cadetblue;
+}
+
+ul {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    list-style-type: none;
+}
+
+li a {
+    border-radius: 7px;
+    padding: 0.1rem 1rem;
+    border: gray 1px solid;
+    cursor: pointer;
+}
+
+li.previous a,
+li.next a {
+    color: #432500;
+}
+
+li.previous a,
+li.next a,
+li.break a {
+    text-decoration: none;
+    border-color: transparent;
+    padding: 5px;
+}
+
+li.active a {
+    background-color: #0366d6;
+    border-color: transparent;
+    color: white;
+    min-width: 32px;
+}
+
+li.disabled a {
+    color: grey;
+}
+
+li.disable,
+li.disabled a {
+    cursor: default;
+}
+
+li.selected {
+    box-shadow: inset 0px 0px 17px 8px #cde1e26b;
+    border-radius: 7px;
+}

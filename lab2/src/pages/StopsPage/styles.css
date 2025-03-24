@@ -1,0 +1,51 @@
+.stops-page {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.stops-page__top-content {
+    flex: 1;
+    max-height: fit-content;
+}
+
+.stops-page__bottom-content {
+    flex: 4;
+}
+
+.stops-page__header {
+    padding: 20px 0 0 10px;
+    background-color: #5f9ea04f;
+    color: #432500;
+}
+
+.stops-page-label {
+    width: 100%;
+    padding-left: 10px;
+    margin: 7px 0 3px 0;
+}
+
+.stops-page__input-filter {
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.stops-page__input-filter input {
+    width: 100%;
+    padding: 0;
+    padding-left: 10px;
+    border: 0;
+    border-radius: 3px;
+    outline: 2px solid #432500;
+}
+
+.stops-page__select-show-in-page {
+    cursor: pointer;
+    height: 24px;
+    width: 55px;
+    text-align: center;
+    margin-left: 10px;
+    border: 0;
+    border-radius: 3px;
+    outline: 2px solid #432500;
+}
