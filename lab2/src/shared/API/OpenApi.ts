@@ -37,17 +37,6 @@ class BaseApi {
         return fetch(this.basePath + url + requestUrl.toString(), requestBody)
             .then(r => { return r; })
     }
-
-    protected parseXML(xmlString: string): any {
-        const { XMLParser } = require("fast-xml-parser");
-        const parser = new XMLParser();
-        try {
-            let jObj = parser.parse(xmlString);
-            return jObj
-        } catch (error) {
-            throw error;
-        }
-    }
 }
 
 export class StationApi extends BaseApi {

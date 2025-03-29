@@ -53,4 +53,4 @@ const StopsPage = (props: { showOnMapHandler: Function }) => {
 }
 
 
-export default StopsPage
+export default StopsPage;
