@@ -5,7 +5,7 @@ import "./style.css"
 import { StationApi } from "../../shared/API/OpenApi";
 import { ConvertTransportType } from "../../shared/HelpFunctions";
 
-const BeforeStopsPage = (props: {}) => {
+const BetweenStopsPage = (props: {}) => {
 
     const stations = useContext(StationContainer);
 
@@ -34,26 +34,26 @@ const BeforeStopsPage = (props: {}) => {
         const codeTo = stationTo.split(" - ")[1];
 
         const api = new StationApi();
-        api.before2Sations(codeFrom, codeTo)
+        api.between2Sations(codeFrom, codeTo)
             .then(r => setSegments(r ?? null))
             .catch(e => { console.log(e); setSegments(e.error.text) });
 
     }
 
     return <>
-        <div className="main-content before-stops-page">
-            <div className="before-stops-page__top-content">
-                <h1 className="before-stops-page__header rubik-800">BEFORE STOPS</h1>
+        <div className="main-content between-stops-page">
+            <div className="between-stops-page__top-content">
+                <h1 className="between-stops-page__header rubik-800">Между станциями</h1>
                 {stations
                     && stations.stations
                     && stations.stations.length > 0
                     && <>
                         <label
-                            className="before-stops-page__label rubik-400">
+                            className="between-stops-page__label rubik-400">
                             Выберите станции
                         </label>
 
-                        <div className="before-stops-page__select-block">
+                        <div className="between-stops-page__select-block">
                             <div className="select-block__select-sub-block">
                                 <label
                                     htmlFor="select-block__select"
@@ -96,7 +96,7 @@ const BeforeStopsPage = (props: {}) => {
                         </div>
 
                         <button
-                            className="before-stops-page__search-button"
+                            className="between-stops-page__search-button"
                             onClick={searchButtonHandler}>
                             Поиск
                         </button>
@@ -104,7 +104,7 @@ const BeforeStopsPage = (props: {}) => {
                     </>}
             </div>
 
-            {segments && <div className="before-stops-page__bottom-content">
+            {segments && <div className="between-stops-page__bottom-content">
                 {(segments as any).segments instanceof Array
                     && <p style={{ fontSize: '20px' }}>На чем можно добраться из <i>{stationFrom.split(" - ")[0]}</i> в <i>{stationTo.split(" - ")[0]}</i>:</p>}
 
@@ -142,4 +142,4 @@ const BeforeStopsPage = (props: {}) => {
     </>
 }
 
-export default BeforeStopsPage;
+export default BetweenStopsPage;

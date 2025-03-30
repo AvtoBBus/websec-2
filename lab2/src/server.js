@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 app.get("/api/stations", cors(corsOptions), async (req, res) => {
     try {
         const requestUrl = new URLSearchParams(req.query);
+        console.log(requestUrl.toString())
         const response = await fetch(`https://api.rasp.yandex.net/v3.0/stations_list/?` + requestUrl.toString());
         const data = await response.json();
         return res.json(data);
@@ -34,6 +35,7 @@ app.get("/api/stations", cors(corsOptions), async (req, res) => {
 app.get("/api/schedule", cors(corsOptions), async (req, res) => {
     try {
         const requestUrl = new URLSearchParams(req.query);
+        console.log(requestUrl.toString())
         const response = await fetch(`https://api.rasp.yandex.net/v3.0/schedule/?` + requestUrl.toString());
         const data = await response.json();
         return res.json(data);
@@ -46,6 +48,7 @@ app.get("/api/schedule", cors(corsOptions), async (req, res) => {
 app.get("/api/search", cors(corsOptions), async (req, res) => {
     try {
         const requestUrl = new URLSearchParams(req.query);
+        console.log(requestUrl.toString())
         const response = await fetch(`https://api.rasp.yandex.net/v3.0/search/?` + requestUrl.toString());
         const data = await response.json();
         return res.json(data);

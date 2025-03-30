@@ -2,8 +2,9 @@ import { useContext, useEffect, useReducer, useState } from "react";
 import StopCard from "../StopCard";
 import { v4 as uuid } from 'uuid';
 import ReactPaginate from 'react-paginate';
-import "./styles.css"
 import StationContainer from "../../shared/Container/StationContainer";
+
+import "./styles.css"
 
 const StopsList = (props: { filter: string | null, showInPage: number, showOnMapHandler: Function }) => {
 
@@ -89,17 +90,18 @@ const StopsList = (props: { filter: string | null, showInPage: number, showOnMap
         />}
 
         <div className="stops-page__stops-list">
-            {stopsData && applyFilter(stopsData.stations).slice(...rangeToShow).map((stop: any) => {
-                return <StopCard
-                    key={uuid()}
-                    data={stop}
-                    yandex_code={stop.codes.yandex_code}
-                    showOnMapHandler={(yandex_code: string) => props.showOnMapHandler(yandex_code)}
-                    isFavorite={isFavorite(stop.codes.yandex_code)}
-                    addToFavorite={(yandex_code: string) => addToFavorite(yandex_code)}
-                    removeFromFavorite={(yandex_code: string) => removeFromFavorite(yandex_code)}
-                />
-            })}
+            {stopsData
+                && applyFilter(stopsData.stations).slice(...rangeToShow).map((stop: any) => {
+                    return <StopCard
+                        key={uuid()}
+                        data={stop}
+                        yandex_code={stop.codes.yandex_code}
+                        showOnMapHandler={(yandex_code: string) => props.showOnMapHandler(yandex_code)}
+                        isFavorite={isFavorite(stop.codes.yandex_code)}
+                        addToFavorite={(yandex_code: string) => addToFavorite(yandex_code)}
+                        removeFromFavorite={(yandex_code: string) => removeFromFavorite(yandex_code)}
+                    />
+                })}
         </div>
 
 

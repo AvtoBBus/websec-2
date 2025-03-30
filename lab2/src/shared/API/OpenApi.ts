@@ -37,6 +37,17 @@ class BaseApi {
         return fetch(this.basePath + url + requestUrl.toString(), requestBody)
             .then(r => { return r; })
     }
+
+    protected parseXML(xmlString: string): any {
+        const { XMLParser } = require("fast-xml-parser");
+        const parser = new XMLParser();
+        try {
+            let jObj = parser.parse(xmlString);
+            return jObj
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export class StationApi extends BaseApi {
@@ -56,7 +67,7 @@ export class StationApi extends BaseApi {
             })
     }
 
-    before2Sations(from: string, to: string) {
+    between2Sations(from: string, to: string) {
         return this.sendRequest('GET', "search?", { from: from, to: to, format: 'json', lang: "ru_RU", transport_types: "train" })
             .then(response => {
                 return response.json().then((r: any) => {

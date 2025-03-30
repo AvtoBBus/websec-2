@@ -23,7 +23,7 @@ import { toMercator } from "@turf/projection";
 import "./App.css"
 import StationContainer from "./shared/Container/StationContainer";
 import { StationApi } from "./shared/API/OpenApi";
-import BeforeStopsPage from "./pages/BeforeStopsPage";
+import BetweenStopsPage from "./pages/BetweenStopsPage";
 
 const App = () => {
 
@@ -32,49 +32,66 @@ const App = () => {
 
   const [stations, setStations] = useState<Array<any> | null>(null);
 
+  const fetchAndPrepareData = async () => {
+    const stationsApi = new StationApi();
+    const res = await stationsApi.getAllStations();
+    if (res && res.countries) {
+      const ruRegions = res.countries.find((elem: any) => elem.title === 'Россия').regions;
+
+      const allStations = ruRegions.reduce((acc: any, currItem: any) => {
+        return [
+          ...acc,
+          ...currItem.settlements.reduce((acc: any, currItem: any) => {
+            return [
+              ...acc,
+              ...currItem.stations
+            ]
+          }, [])
+        ]
+      }, []).filter((item: any) => {
+        return item.transport_type === "train"
+          && item.codes.esr_code
+          && (
+            (item.codes.esr_code as string).startsWith('63')
+            || (item.codes.esr_code as string).startsWith('64')
+            || (item.codes.esr_code as string).startsWith('65')
+          )
+      });
+      return allStations;
+    }
+    return null;
+  }
+
   const setPopup = async (element: any, featureFromMap: Feature, yandex_code: string) => {
     element.innerHTML = featureFromMap.get('marketInfo');
+    element.innerHTML += `<div class="loading">Загружаем список станций</br><div class="spinner-grow text-info"></div></div>`;
 
     const api = new StationApi();
     const res = await api.getSchedule(yandex_code);
-    if (res.error) element.innerHTML += '<br/>' + res.error.text;
-    else {
-      element.innerHTML += '<br/><b>Список всех рейсов:</b><br/><ul>' + res.schedule.map((item: any) => {
-        return `<li><i>${item.days}</i><br/>Маршрут: ${item.thread.short_title}</li>`;
-      }).join('<br/>')
-      element.innerHTML += '</ul>'
+    if (!(element.innerHTML as string).includes('Список всех рейсов')) {
+
+      const index = (element.innerHTML as string).indexOf('<div class="loading">');
+      element.innerHTML = (element.innerHTML as string).slice(0, index);
+
+      if (res.error) element.innerHTML += '<br/>' + res.error.text;
+      else if (!res) element.innerHTML += '<br/>Неизвестная ошибка!<br/>Повторите попытку позже';
+      else {
+        element.innerHTML += '<br/><b>Список всех рейсов:</b><br/><ul>' + res.schedule.map((item: any) => {
+          return `<li><i>${item.days}</i><br/>Маршрут: ${item.thread.short_title}</li>`;
+        }).join('<br/>')
+        element.innerHTML += '</ul>'
+      }
     }
   }
 
   useEffect(() => {
+    fetchAndPrepareData()
+      .then(allStations => {
+        allStations && setStations(allStations);
+      })
     const interval = setInterval(async () => {
-      const stationsApi = new StationApi();
-      const res = await stationsApi.getAllStations();
-      if (res && res.countries) {
-        const ruRegions = res.countries.find((elem: any) => elem.title === 'Россия').regions;
-
-        const allStations = ruRegions.reduce((acc: any, currItem: any) => {
-          return [
-            ...acc,
-            ...currItem.settlements.reduce((acc: any, currItem: any) => {
-              return [
-                ...acc,
-                ...currItem.stations
-              ]
-            }, [])
-          ]
-        }, []).filter((item: any) => {
-          return item.transport_type === "train"
-            && item.codes.esr_code
-            && (
-              (item.codes.esr_code as string).startsWith('63')
-              || (item.codes.esr_code as string).startsWith('64')
-              || (item.codes.esr_code as string).startsWith('65')
-            )
-        });
-
-        setStations(allStations);
-      }
+      const allStations = await fetchAndPrepareData();
+      allStations && setStations(allStations);
     }, 15000);
     return () => clearInterval(interval);
   }, [])
@@ -213,13 +230,11 @@ const App = () => {
 
   return <>
     <StationContainer.Provider value={{ stations: stations ?? [] }}>
-
       <Navigation />
-
-      <Routes>
+      <Routes >
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/stops" element={<StopsPage showOnMapHandler={async (yandex_code: string) => await showOnMapHandler(yandex_code)} />}></Route>
-        <Route path="/before-stops" element={<BeforeStopsPage />}></Route>
+        <Route path="/between-stops" element={<BetweenStopsPage />}></Route>
       </Routes>
 
       <div id="map" ref={mapElement}>

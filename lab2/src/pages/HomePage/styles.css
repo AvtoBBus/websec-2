@@ -3,3 +3,10 @@
     background-color: #5f9ea04f;
     color: #432500;
 }
+
+@media (max-width: 1024px) {
+    .homePageDesc {
+        margin: 0;
+        padding-bottom: 10px;
+    }
+}

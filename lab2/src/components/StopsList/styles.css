@@ -68,3 +68,19 @@ li.selected {
     box-shadow: inset 0px 0px 17px 8px #cde1e26b;
     border-radius: 7px;
 }
+
+@media (max-width: 430px) {
+    .stops-page__pagination {
+        padding: 0;
+        margin: 0.5rem 0.7rem;
+    }
+
+    .stops-page__stops-list {
+        overflow-y: scroll;
+        max-height: calc(100vh - 460px);
+    }
+
+    li a {
+        padding: 0.1rem 0.1rem;
+    }
+}
