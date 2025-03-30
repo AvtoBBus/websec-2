@@ -87,6 +87,13 @@
     flex-direction: column;
 }
 
+.between-stops-page__bottom-content:has(.spinner-grow) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 @media (max-width: 1024px) {
 
     .between-stops-page {

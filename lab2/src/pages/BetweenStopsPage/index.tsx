@@ -4,6 +4,7 @@ import StationContainer from "../../shared/Container/StationContainer";
 import "./style.css"
 import { StationApi } from "../../shared/API/OpenApi";
 import { ConvertTransportType } from "../../shared/HelpFunctions";
+import Spinner from "react-bootstrap/esm/Spinner";
 
 const BetweenStopsPage = (props: {}) => {
 
@@ -12,12 +13,16 @@ const BetweenStopsPage = (props: {}) => {
     const [stationFrom, setStationFrom] = useState<string>('');
     const [stationTo, setStationTo] = useState<string>('');
 
-    const [segments, setSegments] = useState<{ [key: string]: any } | string | null>(null)
+    const [segments, setSegments] = useState<{ [key: string]: any } | string | null>(null);
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (stationFrom === '' && stationTo === '') {
-            setStationFrom(`${stations.stations[0]?.title} - ${stations.stations[0]?.codes.yandex_code}`)
-            setStationTo(`${stations.stations[1]?.title} - ${stations.stations[1]?.codes.yandex_code}`)
+        if (stations && stations.stations.length > 0) {
+            if (stationFrom === '' || stationTo === '') {
+                setStationFrom(`${stations.stations[0]?.title} - ${stations.stations[0]?.codes.yandex_code}`)
+                setStationTo(`${stations.stations[1]?.title} - ${stations.stations[1]?.codes.yandex_code}`)
+            }
         }
         //eslint-disable-next-line
     }, [stations])
@@ -30,12 +35,18 @@ const BetweenStopsPage = (props: {}) => {
     }
 
     const searchButtonHandler = () => {
+
+        setIsLoading(true);
+
         const codeFrom = stationFrom.split(" - ")[1];
         const codeTo = stationTo.split(" - ")[1];
 
         const api = new StationApi();
         api.between2Sations(codeFrom, codeTo)
-            .then(r => setSegments(r ?? null))
+            .then(r => {
+                setSegments(r ?? null);
+                setIsLoading(false);
+            })
             .catch(e => { console.log(e); setSegments(e.error.text) });
 
     }
@@ -47,7 +58,7 @@ const BetweenStopsPage = (props: {}) => {
                 {stations
                     && stations.stations
                     && stations.stations.length > 0
-                    && <>
+                    ? <>
                         <label
                             className="between-stops-page__label rubik-400">
                             Выберите станции
@@ -101,8 +112,21 @@ const BetweenStopsPage = (props: {}) => {
                             Поиск
                         </button>
 
-                    </>}
+                    </>
+                    :
+                    <>
+                        <div className="between-stops-page__bottom-content">
+                            <Spinner animation="grow" variant="info" />
+                        </div>
+                    </>
+                }
             </div>
+
+            {isLoading
+                && <div className="between-stops-page__bottom-content">
+                    <Spinner animation="grow" variant="info" />
+                </div>
+            }
 
             {segments && <div className="between-stops-page__bottom-content">
                 {(segments as any).segments instanceof Array
